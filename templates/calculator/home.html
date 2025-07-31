@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calculateur de Salaire - Accueil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-4">
+            <h1 class="display-4 fw-bold text-primary">
+                <i class="fas fa-calculator me-3"></i>
+                Calculateur de Salaire
+            </h1>
+            <p class="lead text-muted">Calculez votre salaire net selon le système fiscal marocain</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-edit me-2"></i>
+                    Saisie des Données
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.salaire_base.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-money-bill-wave me-2 text-primary"></i>
+                                {{ form.salaire_base.label }}
+                            </label>
+                            {{ form.salaire_base }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.primes_conges.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-gift me-2 text-success"></i>
+                                {{ form.primes_conges.label }}
+                            </label>
+                            {{ form.primes_conges }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.indemnite_exoneree.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-hand-holding-usd me-2 text-info"></i>
+                                {{ form.indemnite_exoneree.label }}
+                            </label>
+                            {{ form.indemnite_exoneree }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.nb_charge_familiale.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-users me-2 text-warning"></i>
+                                {{ form.nb_charge_familiale.label }}
+                            </label>
+                            {{ form.nb_charge_familiale }}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calculator me-2"></i>
+                            Calculer le Salaire
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h4 class="text-center mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Comment ça marche ?
+            </h4>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                            <h5>1. Saisissez vos données</h5>
+                            <p>Remplissez le formulaire avec votre salaire de base, primes, et charges familiales.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="fas fa-cogs fa-3x text-success mb-3"></i>
+                            <h5>2. Calcul automatique</h5>
+                            <p>Le système calcule automatiquement vos cotisations, IR et salaire net.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="fas fa-download fa-3x text-info mb-3"></i>
+                            <h5>3. Exportez les résultats</h5>
+                            <p>Téléchargez vos résultats en format Excel ou PDF.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logo ajouté ici avant le tableau, avec fond et taille plus grande -->
+<div class="text-center my-4 p-3" style="background: rgba(255, 255, 255, 0.9); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img src="{% static 'img/logo.png' %}" alt="Logo" style="height: 140px; display: inline-block;">
+</div>
+
+<div class="mt-5">
+    <h4 class="text-center text-dark mb-3">
+        <i class="fas fa-percentage me-2"></i>Barème de l'IR Marocain
+    </h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-primary">
+                <tr>
+                    <th>Salaire Net Imposable (MAD)</th>
+                    <th>Taux d'imposition</th>
+                    <th>Somme à déduire (MAD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0 – 3 333</td>
+                    <td>0%</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>3 334 – 5 000</td>
+                    <td>10%</td>
+                    <td>333.33</td>
+                </tr>
+                <tr>
+                    <td>5 001 – 6 667</td>
+                    <td>20%</td>
+                    <td>833.33</td>
+                </tr>
+                <tr>
+                    <td>6 668 – 8 333</td>
+                    <td>30%</td>
+                    <td>1 500.00</td>
+                </tr>
+                <tr>
+                    <td>8 334 – 15 000</td>
+                    <td>34%</td>
+                    <td>1 833.33</td>
+                </tr>
+                <tr>
+                    <td>> 15 000</td>
+                    <td>37%</td>
+                    <td>2 283.33</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted text-center fst-italic mt-2">Ce barème est appliqué sur le <strong>Salaire Net Imposable</strong> après déduction des cotisations sociales et frais professionnels.</p>
+</div>
+
+{% endblock %}

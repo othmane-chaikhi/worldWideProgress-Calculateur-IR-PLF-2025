@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Historique des Calculs{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">
+                <i class="fas fa-history me-3"></i>
+                Historique des Calculs
+            </h1>
+            <p class="lead text-muted">Consultez vos derniers calculs de salaire</p>
+        </div>
+
+        {% if calculations %}
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        Derniers Calculs
+                    </h4>
+                    <span class="badge bg-light text-dark">{{ calculations|length }} résultat{{ calculations|length|pluralize }}</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Salaire Base</th>
+                                    <th>Primes</th>
+                                    <th>Charges</th>
+                                    <th>Salaire Net</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for calc in calculations %}
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-calendar me-2 text-muted"></i>
+                                            {{ calc.created_at|date:"d/m/Y H:i" }}
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold">{{ calc.salaire_base|floatformat:2 }}</span> MAD
+                                        </td>
+                                        <td>
+                                            <span class="text-success">{{ calc.primes_conges|floatformat:2 }}</span> MAD
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ calc.nb_charge_familiale }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="fw-bold text-success">{{ calc.salaire_net|floatformat:2 }}</span> MAD
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{% url 'result' calc.id %}" 
+                                                   class="btn btn-outline-primary" 
+                                                   title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'export_excel' calc.id %}" 
+                                                   class="btn btn-outline-success" 
+                                                   title="Excel">
+                                                    <i class="fas fa-file-excel"></i>
+                                                </a>
+                                                <a href="{% url 'export_pdf' calc.id %}" 
+                                                   class="btn btn-outline-danger" 
+                                                   title="PDF">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center">
+                <div class="card">
+                    <div class="card-body py-5">
+                        <i class="fas fa-inbox fa-5x text-muted mb-4"></i>
+                        <h4 class="text-muted">Aucun calcul trouvé</h4>
+                        <p class="text-muted mb-4">Vous n'avez pas encore effectué de calcul de salaire.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>
+                            Effectuer un Calcul
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>
+                Retour à l'Accueil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

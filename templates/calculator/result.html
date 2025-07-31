@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Résultats du Calcul{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-success">
+                <i class="fas fa-check-circle me-3"></i>
+                Résultats du Calcul
+            </h1>
+            <p class="lead text-muted">Détail complet de votre calcul de salaire</p>
+        </div>
+
+        <!-- Net Salary Highlight -->
+        <div class="result-highlight">
+            <i class="fas fa-money-bill-wave me-2"></i>
+            Votre Salaire Net : {{ calculation.salaire_net|floatformat:2 }} MAD
+        </div>
+
+        <!-- Input Data -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>
+                    Données Saisies
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tr>
+                                <td><strong>Salaire de Base</strong></td>
+                                <td>{{ calculation.salaire_base|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Primes et Congés</strong></td>
+                                <td>{{ calculation.primes_conges|floatformat:2 }} MAD</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-striped">
+                            <tr>
+                                <td><strong>Indemnité Exonérée</strong></td>
+                                <td>{{ calculation.indemnite_exoneree|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Charges Familiales</strong></td>
+                                <td>{{ calculation.nb_charge_familiale }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Results -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-calculator me-2"></i>
+                    Détail des Calculs
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">Salaires</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <td><strong>Salaire Brut</strong></td>
+                                <td>{{ calculation.salaire_brut|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Salaire Brut Imposable</strong></td>
+                                <td>{{ calculation.salaire_brut_imposable|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td><strong>Salaire Net Imposable</strong></td>
+                                <td>{{ calculation.salaire_net_imposable|floatformat:2 }} MAD</td>
+                            </tr>
+                        </table>
+                        
+                        <h5 class="text-danger mb-3 mt-4">Cotisations Sociales</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <td><strong>CNSS (4.48%)</strong></td>
+                                <td>{{ calculation.cnss|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AMO (2.26%)</strong></td>
+                                <td>{{ calculation.amo|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mutuelle (2.5%)</strong></td>
+                                <td>{{ calculation.mutuelle|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Frais Professionnels</strong></td>
+                                <td>{{ calculation.frais_professionnels|floatformat:2 }} MAD</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5 class="text-warning mb-3">Impôts</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <td><strong>IR Brut</strong></td>
+                                <td>{{ calculation.ir_brut|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Charge Famille</strong></td>
+                                <td>{{ calculation.charge_famille|floatformat:2 }} MAD</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>IR Net</strong></td>
+                                <td>{{ calculation.ir_net|floatformat:2 }} MAD</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h6 class="text-muted">Calcul effectué le :</h6>
+                            <p class="mb-0">{{ calculation.created_at|date:"d/m/Y à H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-download me-2"></i>
+                    Exporter les Résultats
+                </h4>
+            </div>
+            <div class="card-body text-center">
+                <p class="mb-4">Téléchargez vos résultats dans le format de votre choix :</p>
+                <a href="{% url 'export_excel' calculation.id %}" class="btn-download me-3">
+                    <i class="fas fa-file-excel me-2"></i>
+                    Télécharger Excel
+                </a>
+                <a href="{% url 'export_pdf' calculation.id %}" class="btn-download">
+                    <i class="fas fa-file-pdf me-2"></i>
+                    Télécharger PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-primary me-3">
+                <i class="fas fa-plus me-2"></i>
+                Nouveau Calcul
+            </a>
+            <a href="{% url 'history' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-history me-2"></i>
+                Voir l'Historique
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
